@@ -11,7 +11,8 @@ Summarize the given article into 3-5 clear bullet points.
 Do not include personal opinions, external conclusions, or political bias.
 Stay strictly objective and concise."""
 
-article = input("Please Paste the news article here ... ")
+with open("article.txt", "r", encoding="utf-8") as file:
+    article = file.read()
 
 response = client.models.generate_content(
     model="gemini-3.5-flash",
