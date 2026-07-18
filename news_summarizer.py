@@ -24,3 +24,8 @@ response = client.models.generate_content(
 
 print("\n--- Summary ---")
 print(response.text)
+
+with open("summary_output.txt", "w", encoding="utf-8") as file:
+    file.write(response.text)
+
+print("\n✅ Summary saved to summary_output.txt")
