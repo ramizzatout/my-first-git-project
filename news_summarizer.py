@@ -11,16 +11,22 @@ Summarize the given article into 3-5 clear bullet points.
 Do not include personal opinions, external conclusions, or political bias.
 Stay strictly objective and concise."""
 
-with open("article.txt", "r", encoding="utf-8") as file:
-    article = file.read()
+try:
+    with open("article.txt", "r", encoding="utf-8") as file:
+        article = file.read()
+except FileNotFoundError:
+    print("❌ Error: article.txt not found. Please create the file first.")
 
-response = client.models.generate_content(
-    model="gemini-3.5-flash",
-    config=types.GenerateContentConfig(
-        system_instruction=SYSTEM_INSTRUCTION
-    ),
-    contents=article
-)
+try:
+    response = client.models.generate_content(
+        model="gemini-3.5-flash",
+        config=types.GenerateContentConfig(
+            system_instruction=SYSTEM_INSTRUCTION
+        ),
+        contents=article
+    )
+except Exception as e:
+    print(f"❌ Error calling the AI model: {e}")
 
 print("\n--- Summary ---")
 print(response.text)
