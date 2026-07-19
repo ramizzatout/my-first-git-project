@@ -11,27 +11,33 @@ Summarize the given article into 3-5 clear bullet points.
 Do not include personal opinions, external conclusions, or political bias.
 Stay strictly objective and concise."""
 
-try:
-    with open("article.txt", "r", encoding="utf-8") as file:
-        article = file.read()
-except FileNotFoundError:
-    print("❌ Error: article.txt not found. Please create the file first.")
 
-try:
-    response = client.models.generate_content(
-        model="gemini-3.5-flash",
-        config=types.GenerateContentConfig(
-            system_instruction=SYSTEM_INSTRUCTION
-        ),
-        contents=article
-    )
-except Exception as e:
-    print(f"❌ Error calling the AI model: {e}")
+article_files = ["article.txt", "article2.txt", "article3.txt"]
 
-print("\n--- Summary ---")
-print(response.text)
+for filename in article_files:
 
-with open("summary_output.txt", "w", encoding="utf-8") as file:
-    file.write(response.text)
+    try:
+        with open(filename, "r", encoding="utf-8") as file:
+            article = file.read()
+    except FileNotFoundError:
+        print(f"❌ {filename} not found, skipping...")
+        continue
 
-print("\n✅ Summary saved to summary_output.txt")
+
+    try:
+        response = client.models.generate_content(
+            model="gemini-3.5-flash",
+            config=types.GenerateContentConfig(
+                system_instruction=SYSTEM_INSTRUCTION
+            ),
+            contents=article
+        )
+    except Exception as e:
+        print(f"❌ Error processing {filename}: {e}")
+        continue
+
+    output_filename = f"summary_{filename}"
+    with open(output_filename, "w", encoding="utf-8") as file:
+        file.write(response.text)
+
+    print(f"✅ {filename} summarized → saved to {output_filename}")
